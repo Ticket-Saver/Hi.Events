@@ -34,8 +34,10 @@ class UpsertTicketDTO extends BaseDTO
         public readonly ?bool         $is_hidden_without_promo_code = false,
         public readonly ?array        $tax_and_fee_ids = [],
         public readonly ?int          $ticket_id = null,
+        public readonly ?string       $position = null,
+        public readonly ?string       $seat_number = null,
+        public readonly ?string       $section = null,
     )
     {
     }
 }
-

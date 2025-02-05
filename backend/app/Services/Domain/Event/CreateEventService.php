@@ -97,6 +97,8 @@ class CreateEventService
             'status' => $eventData->getStatus(),
             'short_id' => IdHelper::shortId(IdHelper::EVENT_PREFIX),
             'attributes' => $eventData->getAttributes(),
+            'tipoticket' => $eventData->getTipoticket(),
+            'map' => $eventData->getMap(),
         ]);
     }
 

@@ -28,6 +28,8 @@ export const EventDetailsForm = () => {
             end_date: '',
             timezone: '',
             currency: '',
+            tipoticket: 'general',
+            map: null,
         }
     });
     const formErrorHandle = useFormErrorResponseHandler();
@@ -41,6 +43,8 @@ export const EventDetailsForm = () => {
                 end_date: utcToTz(eventQuery.data.end_date, eventQuery.data.timezone),
                 timezone: eventQuery.data.timezone,
                 currency: eventQuery.data.currency,
+                tipoticket: eventQuery.data.tipoticket,
+                map: eventQuery.data.map,
             });
         }
     }, [eventQuery.isFetched]);
@@ -109,6 +113,29 @@ export const EventDetailsForm = () => {
                             label={t`Timezone`}
                             placeholder={t`UTC`}
                         />
+                    </InputGroup>
+                    <InputGroup>
+                        <Select
+                            {...form.getInputProps('tipoticket')}
+                            label={t`Tipo de Ticket`}
+                            required
+                            data={[
+                                { value: 'general', label: 'General' },
+                                { value: 'enumerado', label: 'Enumerado' },
+                            ]}
+                        />
+
+                        {form.values.tipoticket === 'enumerado' && (
+                            <Select
+                                {...form.getInputProps('map')}
+                                label={t`Mapa`}
+                                placeholder={t`Seleccionar mapa`}
+                                data={[
+                                    { value: 'map1', label: 'Mapa 1' },
+                                    { value: 'map2', label: 'Mapa 2' },
+                                ]}
+                            />
+                        )}
                     </InputGroup>
                     <Button loading={updateMutation.isPending} type={'submit'}>
                         {t`Save`}

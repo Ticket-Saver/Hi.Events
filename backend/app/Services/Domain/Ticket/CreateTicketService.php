@@ -30,20 +30,16 @@ class CreateTicketService
     /**
      * @throws Throwable
      */
-    public function createTicket(
-        TicketDomainObject $ticket,
-        int                $accountId,
-        ?array             $taxAndFeeIds = null,
-    ): TicketDomainObject
+    public function createTicket(TicketDomainObject $ticketData): TicketDomainObject
     {
-        return $this->databaseManager->transaction(function () use ($accountId, $taxAndFeeIds, $ticket) {
-            $persistedTicket = $this->persistTicket($ticket);
+        return $this->databaseManager->transaction(function () use ($ticketData) {
+            $ticket = $this->persistTicket($ticketData);
 
-            if ($taxAndFeeIds) {
-                $this->associateTaxesAndFees($persistedTicket, $taxAndFeeIds, $accountId);
+            if ($ticketData->getTaxAndFeeIds()) {
+                $this->associateTaxesAndFees($ticket, $ticketData->getTaxAndFeeIds(), $ticketData->getAccountId());
             }
 
-            return $this->createTicketPrices($persistedTicket, $ticket);
+            return $this->createTicketPrices($ticket, $ticketData);
         });
     }
 
@@ -51,8 +47,8 @@ class CreateTicketService
     {
         $event = $this->eventRepository->findById($ticketsData->getEventId());
 
-        return $this->ticketRepository->create([
-            'title' => $ticketsData->getTitle(),
+        $attributes = [
+            'title' => $ticketsData->getTitle() ?? '',
             'type' => $ticketsData->getType(),
             'order' => $ticketsData->getOrder(),
             'sale_start_date' => $ticketsData->getSaleStartDate()
@@ -61,17 +57,30 @@ class CreateTicketService
             'sale_end_date' => $ticketsData->getSaleEndDate()
                 ? DateHelper::convertToUTC($ticketsData->getSaleEndDate(), $event->getTimezone())
                 : null,
-            'max_per_order' => $ticketsData->getMaxPerOrder(),
-            'description' => $this->purifier->purify($ticketsData->getDescription()),
-            'min_per_order' => $ticketsData->getMinPerOrder(),
-            'is_hidden' => $ticketsData->getIsHidden(),
-            'hide_before_sale_start_date' => $ticketsData->getHideBeforeSaleStartDate(),
-            'hide_after_sale_end_date' => $ticketsData->getHideAfterSaleEndDate(),
-            'hide_when_sold_out' => $ticketsData->getHideWhenSoldOut(),
-            'show_quantity_remaining' => $ticketsData->getShowQuantityRemaining(),
-            'is_hidden_without_promo_code' => $ticketsData->getIsHiddenWithoutPromoCode(),
+            'max_per_order' => $ticketsData->getMaxPerOrder() ?? 100,
+            'description' => $this->purifier->purify($ticketsData->getDescription() ?? ''),
+            'min_per_order' => $ticketsData->getMinPerOrder() ?? 1,
+            'is_hidden' => $ticketsData->getIsHidden() ?? false,
+            'hide_before_sale_start_date' => $ticketsData->getHideBeforeSaleStartDate() ?? false,
+            'hide_after_sale_end_date' => $ticketsData->getHideAfterSaleEndDate() ?? false,
+            'hide_when_sold_out' => $ticketsData->getHideWhenSoldOut() ?? false,
+            'show_quantity_remaining' => $ticketsData->getShowQuantityRemaining() ?? false,
+            'is_hidden_without_promo_code' => $ticketsData->getIsHiddenWithoutPromoCode() ?? false,
             'event_id' => $ticketsData->getEventId(),
-        ]);
+            'position' => $ticketsData->getPosition(),
+            'seat_number' => $ticketsData->getSeatNumber(),
+            'section' => $ticketsData->getSection(),
+        ];
+
+        // Debug para ver qué datos estamos intentando insertar
+        \Log::info('Ticket attributes:', $attributes);
+
+        // Asegurarnos de que todos los campos requeridos estén presentes
+        if (empty($attributes['title'])) {
+            throw new \InvalidArgumentException('Title is required');
+        }
+
+        return $this->ticketRepository->create($attributes);
     }
 
     /**

@@ -27,7 +27,8 @@ class CreateEventDTO extends BaseDTO
         public readonly ?string     $currency = null,
         public readonly ?AddressDTO $location_details = null,
         public readonly ?string     $status = EventStatus::DRAFT->name,
-
+        public readonly string      $tipoticket = 'general',
+        public readonly ?string     $map = null,
         public ?UpdateEventSettingsDTO $event_settings = null
     )
     {

@@ -34,7 +34,10 @@ export const EditTicketModal = ({onClose, ticketId}: GenericModalProps & { ticke
             is_hidden_without_promo_code: undefined,
             type: TicketType.Paid,
             tax_and_fee_ids: [],
-            prices: []
+            prices: [],
+            position: '',
+            seat_number: '',
+            section: '',
         },
     });
 
@@ -70,12 +73,20 @@ export const EditTicketModal = ({onClose, ticketId}: GenericModalProps & { ticke
                 id: p.id,
                 is_hidden: p.is_hidden,
             })) ?? [],
+            position: ticket.position || '',
+            seat_number: ticket.seat_number || '',
+            section: ticket.section || '',
         });
     }, [ticket, event]);
 
     const handleEditTicket = (ticket: Ticket) => {
         mutation.mutate({
-            ticketData: ticket,
+            ticketData: {
+                ...ticket,
+                position: ticket.position,
+                seat_number: ticket.seat_number,
+                section: ticket.section,
+            },
             eventId: eventId,
             ticketId: ticketId
         }, {

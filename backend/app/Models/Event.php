@@ -9,6 +9,7 @@ use HiEvents\Models\Traits\HasImages;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Event extends BaseModel
 {
@@ -54,30 +55,53 @@ class Event extends BaseModel
         return $this->hasMany(CapacityAssignment::class);
     }
 
+    protected static function generateUniqueShortId(): string
+    {
+        do {
+            $shortId = Str::random(8);
+        } while (static::where('short_id', $shortId)->exists());
+
+        return $shortId;
+    }
+
     public static function boot()
     {
         parent::boot();
 
-        // todo - move into a domain service
-        static::creating(
-            static function (Event $event) {
-                $event->user_id = auth()->user()->id;
-            }
-        );
+        static::creating(function (Event $event) {
+            $event->user_id = auth()->user()->id;
+            $event->short_id = static::generateUniqueShortId();
+            $event->timezone = $event->timezone ?? config('app.timezone', 'UTC');
+        });
     }
 
-    protected function getCastMap(): array
+    protected function getFillableFields(): array
+    {
+        return [
+            EventDomainObjectAbstract::TITLE,
+            EventDomainObjectAbstract::DESCRIPTION,
+            EventDomainObjectAbstract::START_DATE,
+            EventDomainObjectAbstract::END_DATE,
+            EventDomainObjectAbstract::STATUS,
+            EventDomainObjectAbstract::ORGANIZER_ID,
+            EventDomainObjectAbstract::ACCOUNT_ID,
+            EventDomainObjectAbstract::SHORT_ID,
+            EventDomainObjectAbstract::TIMEZONE,
+            'tipoticket',
+            'map',
+        ];
+    }
+ 
+    protected function getCastMap(): array 
     {
         return [
             EventDomainObjectAbstract::START_DATE => 'datetime',
             EventDomainObjectAbstract::END_DATE => 'datetime',
             EventDomainObjectAbstract::ATTRIBUTES => 'array',
             EventDomainObjectAbstract::LOCATION_DETAILS => 'array',
+            'tipoticket' => 'string',
+            'map' => 'string',
         ];
     }
-
-    protected function getFillableFields(): array
-    {
-        return [];
-    }
 }
+ 

@@ -26,6 +26,8 @@ trait EventRules
             'location_details.state_or_region' => ['string', 'max:85'],
             'location_details.zip_or_postal_code' => ['required_with:location_details', 'string', 'max:85'],
             'location_details.country' => ['required_with:location_details', 'string', 'max:2'],
+            'tipoticket' => ['required', 'string', Rule::in(['general', 'enumerado'])],
+            'map' => ['nullable', 'string', Rule::in(['map1', 'map2'])],
         ]);
     }
 
@@ -40,6 +42,8 @@ trait EventRules
                 Rule::when($this->input('end_date') !== null, ['before_or_equal:end_date'])
             ],
             'end_date' => ['date', 'nullable'],
+            'tipoticket' => ['required', 'string', Rule::in(['general', 'enumerado'])],
+            'map' => ['nullable', 'string', Rule::in(['map1', 'map2'])],
         ];
     }
 
@@ -55,6 +59,9 @@ trait EventRules
             'location_details.zip_or_postal_code.required' => __('The zip or postal code field is required'),
             'location_details.country.required' => __('The country field is required'),
             'location_details.country.max' => __('The country field should be a 2 character ISO 3166 code'),
+            'tipoticket.required' => __('El tipo de ticket es requerido'),
+            'tipoticket.in' => __('El tipo de ticket debe ser general o enumerado'),
+            'map.in' => __('El mapa debe ser map1 o map2'),
         ];
     }
 }

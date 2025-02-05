@@ -31,6 +31,8 @@ export const CreateTicketModal = ({onClose}: GenericModalProps) => {
             is_hidden_without_promo_code: false,
             type: TicketType.Paid,
             tax_and_fee_ids: undefined,
+            position: undefined,
+            seat_number: undefined,
             prices: [{
                 price: 0,
                 label: undefined,

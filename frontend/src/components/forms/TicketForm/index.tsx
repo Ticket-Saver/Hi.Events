@@ -12,7 +12,8 @@ import {
     MultiSelect,
     NumberInput,
     Switch,
-    TextInput
+    TextInput,
+    Select
 } from "@mantine/core";
 import {
     IconCash,
@@ -120,6 +121,21 @@ const TicketPriceTierForm = ({form, ticket, event}: TicketFormProps) => {
     })
 }
 
+// Podemos definir las secciones como una constante para reutilizarlas
+export const TICKET_SECTIONS = [
+    { value: 'Anarajando', label: 'Anarajando' },
+    { value: 'Verde', label: 'Verde' },
+    { value: 'Morado', label: 'Morado' },
+    { value: 'Amarillo', label: 'Amarillo' },
+    { value: 'Rojo', label: 'Rojo' },
+    { value: 'Fucsia', label: 'Fucsia' },
+    { value: 'Gris', label: 'Gris' },
+    { value: 'Azul', label: 'Azul' },
+    { value: 'Rosa', label: 'Rosa' },
+    { value: 'Blanco', label: 'Blanco' },
+    { value: 'Negro', label: 'Negro' }
+] as const;
+
 export const TicketForm = ({form, ticket}: TicketFormProps) => {
     const ticketOptions: ItemProps[] = [
         {
@@ -175,7 +191,6 @@ export const TicketForm = ({form, ticket}: TicketFormProps) => {
     const removeTaxesAndFees = () => {
         form.setFieldValue('tax_and_fee_ids', []);
     };
-
     return (
         <>
             <div>
@@ -205,7 +220,6 @@ export const TicketForm = ({form, ticket}: TicketFormProps) => {
                           options for different groups of people.`}
                     </Alert>
                 )}
-
                 <TextInput mt={20}
                            {...form.getInputProps('title')}
                            label={t`Name`}
@@ -222,7 +236,7 @@ export const TicketForm = ({form, ticket}: TicketFormProps) => {
                     <InputGroup>
                         <NumberInput decimalScale={2}
                                      min={0}
-                                     fixedDecimalScale
+                                     fixedDecimalScale 
                                      disabled={isFreeTicket}
                                      leftSection={event?.currency ? getCurrencySymbol(event.currency) : ''}
                                      {...form.getInputProps('prices.0.price')}
@@ -261,7 +275,41 @@ export const TicketForm = ({form, ticket}: TicketFormProps) => {
                         />
                     </InputGroup>
                 )}
+
+                <Fieldset legend={t`Seat Information`} mb={20}>
+                    <InputGroup>
+                        <TextInput
+                            {...form.getInputProps('position')}
+                            value={form.values.position}
+                            label={t`Posición`}
+                            placeholder={t`Ej: Izquierda Centro, Derecha Arriba...`}
+                            description={t`Posición del asiento en el mapa (ej: Izquierda Arriba, Centro)`}
+                        />
+                        <TextInput
+                        
+                            {...form.getInputProps('seat_number')}
+                            value={form.values.seat_number}
+                            label={t`Número de Asiento`}
+                            placeholder={t`Ej: A1, B2, C3...`}
+                            description={t`Identificador del asiento (puede incluir letras y números)`}
+                        />
+                    </InputGroup>
+                    <div className="space-y-4">
+                        <Select
+                            label={t`Section`}
+                            placeholder={t`Select a section`}
+                            data={TICKET_SECTIONS}
+                            value={form.values.section}
+                            onChange={(value) => form.setFieldValue('section', value || '')}
+                            searchable
+                            clearable
+                            nothingFoundMessage={t`No section found`}
+                        />
+                    </div>
+                </Fieldset>
+              
             </div>
+               
 
             {form.values.type === TicketType.Tiered && (
                 <Fieldset legend={t`Price tiers`} mt={20} mb={20}>

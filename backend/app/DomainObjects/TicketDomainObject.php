@@ -17,6 +17,16 @@ class TicketDomainObject extends Generated\TicketDomainObjectAbstract implements
 
     private ?string $offSaleReason = null;
 
+    private ?string $position = null;
+
+    private ?string $seat_number = null;
+
+    private ?array $taxAndFeeIds = null;
+
+    private ?int $accountId = null;
+
+    private ?string $section = null;
+
     public static function getDefaultSort(): string
     {
         return self::ORDER;
@@ -198,5 +208,60 @@ class TicketDomainObject extends Generated\TicketDomainObjectAbstract implements
     public function getOffSaleReason(): ?string
     {
         return $this->offSaleReason;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function getSeatNumber(): ?string
+    {
+        return $this->seat_number;
+    }
+
+    public function setPosition(?string $position): self
+    {
+        $this->position = $position;
+        return $this;
+    }
+
+    public function setSeatNumber(?string $seatNumber): self
+    {
+        $this->seat_number = $seatNumber;
+        return $this;
+    }
+
+    public function setTaxAndFeeIds(?array $taxAndFeeIds): self
+    {
+        $this->taxAndFeeIds = $taxAndFeeIds;
+        return $this;
+    }
+
+    public function getTaxAndFeeIds(): ?array
+    {
+        return $this->taxAndFeeIds;
+    }
+
+    public function setAccountId(?int $accountId): self
+    {
+        $this->accountId = $accountId;
+        return $this;
+    }
+
+    public function getAccountId(): ?int
+    {
+        return $this->accountId;
+    }
+
+    public function getSection(): ?string
+    {
+        return $this->section;
+    }
+
+    public function setSection(?string $section): self
+    {
+        $this->section = $section;
+        return $this;
     }
 }

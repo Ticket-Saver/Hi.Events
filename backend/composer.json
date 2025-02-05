@@ -9,7 +9,7 @@
         "php": "^8.2",
         "ext-intl": "*",
         "brick/money": "^0.8.0",
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "^3.9",
         "druc/laravel-langscanner": "^2.2",
         "ezyang/htmlpurifier": "^4.17",
         "guzzlehttp/guzzle": "^7.2",

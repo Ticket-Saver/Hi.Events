@@ -159,13 +159,8 @@ class EventDomainObject extends Generated\EventDomainObjectAbstract implements I
 
     public function isEventInPast(): bool
     {
-        if ($this->getEndDate() === null) {
-            return false;
-        }
-        $endDate = Carbon::parse($this->getEndDate());
-        $endDate->setTimezone($this->getTimezone());
-
-        return $endDate->isPast();
+        $timezone = $this->getTimezone() ?? config('app.timezone', 'UTC');
+        return now()->setTimezone($timezone)->gt($this->getEndDate() ?? now());
     }
 
     public function isEventInFuture(): bool
@@ -173,24 +168,21 @@ class EventDomainObject extends Generated\EventDomainObjectAbstract implements I
         if ($this->getStartDate() === null) {
             return false;
         }
-        $startDate = Carbon::parse($this->getStartDate());
-        $startDate->setTimezone($this->getTimezone());
-
+        $timezone = $this->getTimezone() ?? config('app.timezone', 'UTC');
+        $startDate = Carbon::parse($this->getStartDate())->setTimezone($timezone);
         return $startDate->isFuture();
     }
 
     public function isEventOngoing(): bool
     {
-        $startDate = Carbon::parse($this->getStartDate());
-        $startDate->setTimezone($this->getTimezone());
+        $timezone = $this->getTimezone() ?? config('app.timezone', 'UTC');
+        $startDate = Carbon::parse($this->getStartDate())->setTimezone($timezone);
 
         if ($this->getEndDate() === null) {
             return $startDate->isPast();
         }
 
-        $endDate = Carbon::parse($this->getEndDate());
-        $endDate->setTimezone($this->getTimezone());
-
+        $endDate = Carbon::parse($this->getEndDate())->setTimezone($timezone);
         return $startDate->isPast() && $endDate->isFuture();
     }
 

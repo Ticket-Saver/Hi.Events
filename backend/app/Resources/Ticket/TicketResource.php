@@ -19,10 +19,11 @@ class TicketResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        /** @var TicketDomainObject $this */
         return [
             'id' => $this->getId(),
             'title' => $this->getTitle(),
-            'type' => $this->getType(),
+            'type' => $this->getType(), 
             'order' => $this->getOrder(),
             'description' => $this->getDescription(),
             'price' => $this->when(
@@ -52,6 +53,9 @@ class TicketResource extends JsonResource
                 (bool)$this->getTaxAndFees(),
                 fn() => TaxAndFeeResource::collection($this->getTaxAndFees())
             ),
+            'position' => $this->getPosition(),
+            'seat_number' => $this->getSeatNumber(),
+            'section' => $this->getSection(),
             'prices' => $this->when(
                 (bool)$this->getTicketPrices(),
                 fn() => TicketPriceResource::collection($this->getTicketPrices())

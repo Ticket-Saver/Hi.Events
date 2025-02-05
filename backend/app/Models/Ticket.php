@@ -10,17 +10,52 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends BaseModel
 {
+    protected $fillable = [
+        'title',
+        'description',
+        'type',
+        'max_per_order',
+        'min_per_order',
+        'sale_start_date',
+        'sale_end_date',
+        'hide_before_sale_start_date',
+        'hide_after_sale_end_date',
+        'show_quantity_remaining',
+        'hide_when_sold_out',
+        'is_hidden_without_promo_code',
+        'event_id',
+        'position',
+        'seat_number',
+        'order',
+        'is_hidden',
+        'section',
+    ];
+
+    protected $casts = [
+        'hide_before_sale_start_date' => 'boolean',
+        'hide_after_sale_end_date' => 'boolean',
+        'show_quantity_remaining' => 'boolean',
+        'hide_when_sold_out' => 'boolean',
+        'is_hidden_without_promo_code' => 'boolean',
+        'is_hidden' => 'boolean',
+    ];
+
     protected function getCastMap(): array
     {
         return [
             TicketDomainObjectAbstract::SALES_VOLUME => 'float',
             TicketDomainObjectAbstract::SALES_TAX_VOLUME => 'float',
+            'position' => 'string',
+            'seat_number' => 'string',
         ];
     }
 
     protected function getFillableFields(): array
     {
-        return [];
+        return [
+            'position',
+            'seat_number',
+        ];
     }
 
     public function questions(): BelongsToMany

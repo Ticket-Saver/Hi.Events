@@ -26,12 +26,16 @@ class CreateEventAction extends BaseAction
     public function __invoke(CreateEventRequest $request): JsonResponse
     {
         $authorisedUser = $this->getAuthenticatedUser();
+        $accountId = $this->getAuthenticatedAccountId();
 
         $eventData = array_merge(
             $request->validated(),
             [
-                'account_id' => $this->getAuthenticatedAccountId(),
+                'account_id' => $accountId,
                 'user_id' => $authorisedUser->getId(),
+                'tipoticket' => $request->input('tipoticket'),
+                'map' => $request->input('map'),
+                'timezone' => $request->input('timezone', config('app.timezone', 'UTC')),
             ]
         );
 

@@ -29,6 +29,8 @@ export const CreateEventModal = ({onClose}: GenericModalProps) => {
             end_date: undefined,
             description: undefined,
             organizer_id: undefined,
+            tipoticket: 'general',
+            map: undefined,
         },
         validate: {
             title: hasLength({max: 150}, t`Name should be less than 150 characters`),
@@ -66,6 +68,7 @@ export const CreateEventModal = ({onClose}: GenericModalProps) => {
     }, [form.values.organizer_id]);
 
     const handleCreate = (values: Partial<Event>) => {
+        console.log('Form values:', values);
         eventMutation.mutateAsync({
             eventData: values,
         }).then((data) => {
@@ -85,6 +88,7 @@ export const CreateEventModal = ({onClose}: GenericModalProps) => {
             withCloseButton
         >
             {showCreateOrganizer && (
+                
                 <Card>
                     <h3 className={classes.createOrganizerHeading}>
                         {t`Create Organizer`}
@@ -135,6 +139,30 @@ export const CreateEventModal = ({onClose}: GenericModalProps) => {
                     error={form.errors.description as string}
                 />
 
+                <Select
+                    {...form.getInputProps('tipoticket')}
+                    label={t`Tipo de Ticket`}
+                    required
+                    data={[
+                        { value: 'general', label: 'General' },
+                        { value: 'enumerado', label: 'Enumerado' },
+                    ]}
+                    mt={20}
+                />
+
+                {form.values.tipoticket === 'enumerado' && (
+                    <Select
+                        {...form.getInputProps('map')}
+                        label={t`Mapa`}
+                        placeholder={t`Seleccionar mapa`}
+                        data={[
+                            { value: 'map1', label: 'Mapa 1' },
+                            { value: 'map2', label: 'Mapa 2' },
+                        ]}
+                        mt={10}
+                    />
+                )}
+
                 <SimpleGrid mt={20} cols={2}>
                     <TextInput type={'datetime-local'}
                                {...form.getInputProps('start_date')}
@@ -144,12 +172,14 @@ export const CreateEventModal = ({onClose}: GenericModalProps) => {
                     <TextInput type={'datetime-local'}
                                {...form.getInputProps('end_date')}
                                label={t`End Date`}
+                               required
                     />
                 </SimpleGrid>
-                <Button loading={eventMutation.isPending} mt={20} fullWidth type={'submit'}>
-                    {t`Continue Event Setup`}
+
+                <Button type="submit" fullWidth mt="xl">
+                    {t`Create Event`}
                 </Button>
             </form>
         </Modal>
     );
-}
+}  

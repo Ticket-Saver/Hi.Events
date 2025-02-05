@@ -30,7 +30,7 @@ class CreateEventHandler
             organizerId: $eventData->organizer_id,
             accountId: $eventData->account_id
         );
-
+ 
         $event = (new EventDomainObject())
             ->setOrganizerId($eventData->organizer_id)
             ->setAccountId($eventData->account_id)
@@ -44,7 +44,9 @@ class CreateEventHandler
             ->setCurrency($eventData->currency ?? $organizer->getCurrency())
             ->setStatus($eventData->status)
             ->setEventSettings($eventData->event_settings)
-            ->setLocationDetails($eventData->location_details?->toArray());
+            ->setLocationDetails($eventData->location_details?->toArray())
+            ->setTipoticket($eventData->tipoticket)
+            ->setMap($eventData->map);
 
         return $this->createEventService->createEvent($event);
     }

@@ -9,7 +9,7 @@ use HiEvents\Validators\EventRules;
 
 class CreateEventRequest extends BaseRequest
 {
-    use EventRules;
+    use EventRules; 
 
     public function rules(): array
     {

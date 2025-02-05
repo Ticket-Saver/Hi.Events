@@ -170,6 +170,8 @@ export interface Event extends EventBase {
     timezone: string;
     organizer_id?: IdParam;
     location_details?: VenueAddress;
+    tipoticket: 'general' | 'enumerado';
+    map?: 'map1' | 'map2';
 }
 
 export interface EventDailyStats {
@@ -311,6 +313,9 @@ export interface Ticket {
     tax_and_fee_ids?: IdParam[];
     taxes_and_fees?: TaxAndFee[];
     is_hidden?: boolean;
+    position?: string;
+    seat_number?: string;
+    section?: string;
 }
 
 export interface Attendee {
@@ -534,13 +539,13 @@ export type QueryFilterFields = {
 }
 
 export interface QueryFilters {
-    pageNumber?: number;
-    perPage?: number;
     query?: string;
+    pageNumber?: number;
     sortBy?: string;
-    sortDirection?: string;
-    filterFields?: QueryFilterFields;
-    additionalParams?: Record<string, any>;
+    sortDirection?: 'asc' | 'desc';
+    position?: string;
+    seat_number?: string;
+    section?: string;
 }
 
 export interface GenericModalProps {

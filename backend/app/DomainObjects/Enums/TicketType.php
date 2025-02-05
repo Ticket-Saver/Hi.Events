@@ -6,8 +6,8 @@ enum TicketType
 {
     use BaseEnum;
 
-    case PAID;
     case FREE;
+    case PAID;
     case DONATION;
     case TIERED;
     case REGISTRATION;

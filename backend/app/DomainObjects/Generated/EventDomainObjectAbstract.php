@@ -29,6 +29,8 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     final public const LOCATION = 'location';
     final public const SHORT_ID = 'short_id';
     final public const TICKET_QUANTITY_AVAILABLE = 'ticket_quantity_available';
+    final public const TIPOTICKET = 'tipoticket';
+    final public const MAP = 'map'; 
 
     protected int $id;
     protected int $account_id;
@@ -49,6 +51,8 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     protected ?string $location = null;
     protected string $short_id;
     protected ?int $ticket_quantity_available = null;
+    protected string $tipoticket = 'general';
+    protected ?string $map = null;
 
     public function toArray(): array
     {
@@ -72,6 +76,8 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
                     'location' => $this->location ?? null,
                     'short_id' => $this->short_id ?? null,
                     'ticket_quantity_available' => $this->ticket_quantity_available ?? null,
+                    'tipoticket' => $this->tipoticket ?? null,
+                    'map' => $this->map ?? null,
                 ];
     }
 
@@ -282,5 +288,27 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     public function getTicketQuantityAvailable(): ?int
     {
         return $this->ticket_quantity_available;
+    }
+
+    public function getTipoticket(): string
+    {
+        return $this->tipoticket;
+    }
+
+    public function setTipoticket(string $tipoticket): self
+    {
+        $this->tipoticket = $tipoticket;
+        return $this;
+    }
+
+    public function getMap(): ?string
+    {
+        return $this->map;
+    }
+
+    public function setMap(?string $map): self
+    {
+        $this->map = $map;
+        return $this;
     }
 }

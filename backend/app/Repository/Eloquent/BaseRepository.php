@@ -160,9 +160,20 @@ abstract class BaseRepository implements RepositoryInterface
 
     public function create(array $attributes): DomainObjectInterface
     {
-        $model = $this->model->newInstance(collect($attributes)->toArray());
+        // Debug para ver qué atributos llegan al repositorio
+        \Log::info('BaseRepository create attributes:', $attributes);
+
+        $model = $this->model->newInstance();
+        
+        // Asignamos los atributos uno por uno para asegurarnos que se asignen correctamente
+        foreach ($attributes as $key => $value) {
+            $model->$key = $value;
+        }
+
+        // Debug para ver el modelo antes de guardarlo
+        \Log::info('Model before save:', $model->toArray());
+
         $model->save();
-        $this->resetModel();
 
         return $this->handleSingleResult($model);
     }

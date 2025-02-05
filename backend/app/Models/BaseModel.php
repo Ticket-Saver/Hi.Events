@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin Builder
  */
 abstract class BaseModel extends Model
-{
+{ 
     use SoftDeletes;
 
     /** @var array */
